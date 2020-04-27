@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>dataptmad1019 final</title>
+
+  <link rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+
+<body>
+
+<header class="bg-primary py-5 mb-5">
+  <div class="container h-100">
+    <div class="row h-100 align-items-center">
+      <div class="col-lg-12 text-center">
+        <h1 id="student_name" class="display-4 text-white mb-2">DATAPTMAD1019 FINAL</h1>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 offset-md-3 mb-5">
+      <div class="card h-100">
+        <img id="student_img" class="card-img-top fade-in"
+             src="./images/ironhack.png" alt="">
+        <div class="card-footer">
+          <div class="text-center">
+            <audio id="song_trigger" style="width:100%" controls autoplay>
+              <source id="student_song" src="student_song" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+          <div class="text-center">
+            <a id="button_trigger" style="width:100%" href="#" onclick="run()"
+               class="btn btn-primary">GO!</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+</body>
+
+<script>
+    var students = ['abacuc', 'ana', 'borja', 'christopher', 'cibeles',
+        'cristina', 'emilio', 'fran', 'julen', 'julia', 'luana', 'miguel_martin',
+        'miguel_venegas', 'nicolas', 'stefania', 'veronica', 'victor'];
+
+    var TIMEOUT = 2800;
+
+    var button_trigger = document.getElementById('button_trigger');
+    var audio = document.getElementById('song_trigger');
+    var image = document.getElementById('student_img');
+    var song = document.getElementById('student_song');
+
+    function run() {
+        if (button_trigger.innerText === 'GO!') {
+            button_trigger.innerText = 'NEXT!';
+            playStudent('alberto');
+        } else {
+            playStudent();
+        }
+    }
+
+    function playStudent(student = null) {
+        var student = student;
+        if (!student) {
+            student = getStudent();
+        }
+        console.log('chosen student: ' + student);
+
+        console.log('loading...');
+        loading();
+
+        updateTags(student);
+        console.log('updated tags!');
+
+        playAndShow();
+        console.log("let's rock!");
+    }
+
+    function getStudent() {
+        var student = students.splice(Math.floor(Math.random() * students.length), 1);
+        console.log(students);
+
+        if (students.length === 0) {
+            button_trigger.innerText = 'FINISH!';
+        }
+
+        if (student.length === 0) {
+            student = 'teachers';
+        }
+        return student;
+    }
+
+    function playSong() {
+        audio.load();
+        audio.play();
+    }
+
+    function loading() {
+        var name = document.getElementById('student_name');
+        name.innerText = 'LOADING...';
+        image.src = 'images/bunnyparrot.gif';
+        song.src = 'songs/drums.mp3';
+
+        playSong();
+    }
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function updateTags(student) {
+        await sleep(TIMEOUT);
+        var name = document.getElementById('student_name');
+        name.innerText = student.toString().toUpperCase();
+        image.src = 'images/' + student + '.png';
+        song.src = 'songs/' + student + '.mp3';
+    }
+
+    function fadeIn() {
+        image.style.opacity = 0;
+        var tick = function () {
+            image.style.opacity = +image.style.opacity + 0.003;
+            if (+image.style.opacity < 1) {
+                (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16)
+            }
+        };
+        tick();
+    }
+
+    async function playAndShow() {
+        await sleep(TIMEOUT);
+        playSong();
+        fadeIn();
+    }
+
+</script>
+</html>
